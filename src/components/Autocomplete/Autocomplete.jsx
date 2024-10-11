@@ -1,11 +1,9 @@
 import PropTypes from "prop-types";
-import { useState, useRef } from "react";
+import { useState } from "react";
 import "./style.css";
-function Autocomplete(props) {
-  const { options = [] } = props;
+function Autocomplete({ options, value, onChange }) {
   const [filteredOptions, setFilteredOptions] = useState([]);
   const [isFocused, setIsFocused] = useState(false);
-  const inputRef = useRef(null);
   const filterOnInput = (event) => {
     if (event.target.value.length === 0) setFilteredOptions([]);
     else
@@ -14,15 +12,16 @@ function Autocomplete(props) {
       );
   };
   const applyInputValue = (event) => {
-    inputRef.current.value = event.target.innerHTML;
+    onChange({ target: { value: event.target.innerHTML } });
   };
 
   return (
     <>
       <div>
         <input
-          ref={inputRef}
           type="text"
+          value={value}
+          onChange={onChange}
           onInput={filterOnInput}
           onBlur={() => {
             setIsFocused(false);
@@ -52,6 +51,8 @@ Autocomplete.propTypes = {
       text: PropTypes.string.isRequired,
     })
   ),
+  value: PropTypes.string,
+  onChange: PropTypes.func,
 };
 
 export default Autocomplete;
